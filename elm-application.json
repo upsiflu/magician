@@ -1,0 +1,9 @@
+{
+    "name": "flupsi/magician",
+    "summary": "The SkryScanner app for our beloved Magician!",
+    "version": "0.0.1",
+    "exposed-modules": [
+        "Main",
+        "Seriousness"
+    ]
+}

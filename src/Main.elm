@@ -1,4 +1,8 @@
-module Main exposing (..)
+module Main exposing (main, Model(..), Shared, Msg(..))
+
+{-| The SkryScanner App for the beloved Magician!
+
+@docs main, Model, Shared, Msg-}
 
 import Browser
 import Html
@@ -11,13 +15,12 @@ import Length exposing (Meters)
 import Seriousness exposing (Seriousness, create, read)
 import Css exposing (..)
 
-{-|
-@docs Model, init
--}
-
+{-|-}
+main:Program () Model Msg
 main =
   Browser.sandbox { init = init, update = update, view = view >> toUnstyled }
 
+{-|-}
 type Model
     = Scry (List String) Shared
     | Map Shared
@@ -31,11 +34,11 @@ init = Scry [] initShared
 type Country =
     Country
 
-{-| Position relative to the tower (in Meters, because that's the package's internal representation)-}
+{-| Position relative to the tower (**in meters**, because that's the package's internal representation)-}
 type alias Point =
     Point2d Meters Country
 
-{-| Lengths **in m** -}
+{-| Lengths **in meters** -}
 point : { x : Float, y : Float } -> Point
 point = Point2d.fromMeters
 
@@ -70,6 +73,7 @@ patientsToList p = []
 {-| In a path, the **implied** initial and terminal "patient" is the tower. This makes it a Polygon2D. -}
 type alias Path = List (Vector, Patient)
 
+{-|-}
 type Msg
     = GoToScry
     | GoToMap

@@ -98,5 +98,11 @@ This means that the Ui will only show a spatial model; times can be derived by m
 #Architecture / Libraries
 
 The app is offline-only, so the codebase is very simple. I have included `ianmackenzie`'s geometry library so I don't need to look up all the vector math I've forgotten in the past decade.
+The other libraries I had to include for the Browser platform are listed in the [elm.json](./elm.json) file.
 
-I decided not to use any Gui library, and instead use the default `Html` and `Svg` packages from Elm, because the userbase is {1} and a magician doesn't need a polished interface, and developers don't need abstractions over the `view` because it's really basic.
+
+**Tradeoffs**
+
+- I decided not to use any Gui library: Developers don't need abstractions over the `view` because it's really basic for now, and the userbase is {1} and a magician doesn't need a polished interface
+- Using the default `Html`, `Css` and `Svg` packages from Elm. The next step will be to use separate files for stylesheets, an `index.html`, some JavaScript class files for custom-elements, parcel or another bundler, a live dev server, perhaps Nix for package and environment management, etc. There are some nice templates for such environments and boilerplate scaffolding. I've not gone down that road because I like how the pure Elm solution has far less files and a single source of truth.
+    
