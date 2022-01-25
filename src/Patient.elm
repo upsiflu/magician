@@ -1,11 +1,11 @@
-module Patient exposing (Patient, decoder, encode, serialize, scaleAbout, translateBy, view)
+module Patient exposing (Patient, decoder, encode, serialize, scaleAbout, translateBy, getPoint, getSeriousness, ViewMode(..), view)
 
 {-|
-@docs Patient, decoder, encode, serialize, scaleAbout, translateBy, view-}
+@docs Patient, decoder, encode, serialize, scaleAbout, translateBy, getPoint, getSeriousness, ViewMode, view-}
 
 import Html
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (css, href, src)
+import Html.Styled.Attributes as Attributes exposing (css, href, src)
 import Html.Styled.Events as Events
 import Css exposing (..)
 
@@ -64,6 +64,7 @@ serialize (point, seriousness) =
         , String.fromInt (Seriousness.encode seriousness)
         ]
 
+{-|-}
 scaleAbout : Point -> Float -> Patient -> Patient
 scaleAbout origin factor ( point, seriousness ) =
     let
@@ -73,20 +74,92 @@ scaleAbout origin factor ( point, seriousness ) =
     in
     ( newPoint, seriousness )
 
+{-|-}
 translateBy : Vector -> Patient -> Patient
 translateBy vector ( point, seriousness ) =
     ( Point2d.translateBy vector point, seriousness )
+
+
+{-|-}
+getPoint : Patient -> Point
+getPoint = Tuple.first
+
+{-|-}
+getSeriousness : Patient -> Seriousness
+getSeriousness = Tuple.second
+
+
+{-|-}
+type ViewMode msg
+    = Interactive {onClick : msg}
+    | Highlighted {onClick : msg}
+    | Passive
 
 
 {-| will draw a button for the patient on absolute coordinates:
     
 `n%` of the parent height resp. width.
 -}
-view : {onClick : msg} -> Patient -> Html msg
-view config ( point, seriousness ) = 
+view : ViewMode msg -> Patient -> Html msg
+view mode ( point, seriousness ) = 
     let 
         {x, y} = 
             Point2d.toMeters point
+        
+        representation =
+            case mode of
+                Interactive config ->
+                    [ button 
+                        [ Events.onClick config.onClick 
+                        , css
+                            [ transform (translate2 (px -22) (px -22))
+                            , height (px 40)
+                            , width (px 40)
+                            , borderRadius (px 20)
+                            , borderWidth (px 2)
+                            , padding zero
+                            , opacity (num 0.9)
+                            ] 
+                        ]
+                        [text (String.fromInt (Seriousness.encode seriousness))]
+                    ]
+                Highlighted config ->
+                    [ button 
+                        [ Events.onClick config.onClick 
+                        , css
+                            [ transform (translate2 (px -22) (px -22))
+                            , height (px 40)
+                            , width (px 40)
+                            , borderRadius (px 20)
+                            , borderWidth (px 2)
+                            , padding zero
+                            , opacity (num 0.9)
+                            , backgroundColor (rgb 250 230 33)
+                            , borderColor (rgb 260 250 43)
+                            ] 
+                        ]
+                        [text (String.fromInt (Seriousness.encode seriousness))]
+                    ]
+                Passive ->
+                    [ button 
+                        [ css
+                            [ transform (translate2 (px -20) (px -20))
+                            , height (px 40)
+                            , width (px 40)
+                            , borderRadius (px 20)
+                            , borderWidth (px 0)
+                            , padding zero
+                            , opacity (num 0.8)
+                            , backgroundColor (rgb 20 20 20)
+                            , color (rgb 255 255 255)
+                            ] 
+                        , Attributes.disabled True
+                        ]
+                        [text (String.fromInt (Seriousness.encode seriousness))]
+                    ]
+
+
+
     in
     div [ css
             [ position absolute
@@ -94,16 +167,4 @@ view config ( point, seriousness ) =
             , top ( pct y )
             ] 
         ]
-        [ button 
-            [ Events.onClick config.onClick 
-            , css
-                [ margin2 (px -20) (px -20)
-                , height (px 40)
-                , width (px 40)
-                , borderRadius (px 20)
-                , borderWidth (px 0)
-                , padding zero
-                ] 
-            ]
-            [text (String.fromInt (Seriousness.encode seriousness))]
-        ]
+        representation

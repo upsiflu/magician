@@ -26,7 +26,7 @@
     - either in the space-separated string form or as JSON
     - Should show some helpful messages when mistyping
     - input might be line-based or not
-- `Overview` the entire 120*120km2 map including little integers for the patient `s`
+- `Map` the entire 120*120km2 map including little integers for the patient `s`
     - initializes the minimal path (tower -> tower)
     - `Zoom in` (to show patients such that no pair is closer than 1 cm, so that it's clickable -- only available when there is such a case)
 - `Print` the path on a new page
@@ -44,9 +44,10 @@
 
 **Status Display**
 
-(available in `Overview` and zoomed-in view)
+(available in `Map` view)
 
 - Length of the path; percentage of 120km; remaining km.
+- This is an alternative Viewmode of `Path`
 
 
 ## Convenience
@@ -108,4 +109,4 @@ The other libraries I had to include for the Browser platform are listed in the 
 
 - I decided not to use any Gui library: Developers don't need abstractions over the `view` because it's really basic for now, and the userbase is {1} and a magician doesn't need a polished interface
 - Using the default `Html`, `Css` and `Svg` packages from Elm. The next step will be to use separate files for stylesheets, an `index.html`, some JavaScript class files for custom-elements, parcel or another bundler, a live dev server, perhaps Nix for package and environment management, etc. There are some nice templates for such environments and boilerplate scaffolding. I've not gone down that road because I like how the pure Elm solution has far less files and a single source of truth.
-    
+- Concerning components: I decided to implement a single TEA module, Main, that processes all updates to the state. The submodules are not components in the sense of an interface widget, but types, and some of them offer several `ViewMode`s, that is, different widgets representing the same type. For example, the `Path` is `view`ed twice in the `Map` page, once as a map overlay and once as a list with stats.

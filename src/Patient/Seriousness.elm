@@ -1,6 +1,6 @@
 module Patient.Seriousness exposing (Seriousness, create, encode)
 {-|
-@docs Seriousness, create, read
+@docs Seriousness, create, encode
 -}
 
 

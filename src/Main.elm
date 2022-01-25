@@ -84,7 +84,7 @@ update msg model =
                     Print shared
 
                 ( Map shared, SelectedPatient i ) ->
-                    Map shared -- Todo!
+                    Map { shared | path = Path.toggle i shared.path }
                 
 
             -- Print screen
@@ -116,11 +116,24 @@ view model =
                         ) 
                         shared.patients
                 Map shared ->
-                    Cloud.view 
-                        ( Cloud.Map { onClick = SelectedPatient } ) 
-                        shared.patients
+                    div 
+                        [ css [displayFlex]]
+                        [ Cloud.view 
+                            ( Cloud.Map 
+                                { patientView = \i -> 
+                                    if Path.isRecent i shared.path
+                                    then Patient.Highlighted { onClick = SelectedPatient i}
+                                    else if Path.visited i shared.path
+                                    then Patient.Passive 
+                                    else Patient.Interactive { onClick = SelectedPatient i}
+                                , overlay = \patients -> Path.view (Path.OverlaidOver patients) shared.path
+                                } 
+                            ) 
+                            shared.patients
+                        , Path.view Path.List shared.path
+                        ]
                 Print shared ->
-                    text "(WIP Path view with export options)"
+                    Path.view Path.List shared.path
 
         navigation =
             let

@@ -1,7 +1,11 @@
-module Patient.Cloud exposing (Cloud, deserialize, Raw, serialize, ViewMode(..), view)
+module Patient.Cloud exposing (Cloud, deserialize, Raw, serialize, ViewMode(..), at, view)
 
 {-| This models a serializable ordered set of `Patient`s. 
-@docs Cloud, deserialize, Raw, serialize, ViewMode, view-}
+The position in the list (`at`) can be exploited to indicate a unique patient.
+@docs Cloud, deserialize, Raw, serialize, ViewMode, at, view 
+-}
+
+import List.Extra as List
 
 import Html
 import Html.Styled exposing (..)
@@ -63,41 +67,46 @@ serialize =
 
 {-|-}
 type ViewMode msg
-    = Map {onClick : Int -> msg}
+    = Map {patientView : Int -> Patient.ViewMode msg, overlay : Cloud -> Html msg }
     | Input {onInput : String -> msg, onSanitize : Cloud -> msg} (List String)
+
+{-|-}
+at : Int -> Cloud -> Maybe Patient
+at = List.getAt
 
 {-|-}
 view : ViewMode msg -> Cloud -> Html msg
 view mode cloud =
     case mode of
-        Map { onClick } ->
+        Map config ->
             let
+                -- radius is 50%
                 factor =
                     cloud
                         |> List.map 
-                            ( Tuple.first >> Point2d.distanceFrom Country.tower >> Length.inMeters )
+                            ( Patient.getPoint >> Point2d.distanceFrom Country.tower >> Length.inMeters )
                         |> List.maximum
                         |> Maybe.withDefault 0.0
-                        |> Debug.log "my maximum distance"
                         |> (\max -> 50/max)
                 leftTopCorner =
                     Vector2d.meters 50 50
+
+                percentageCloud =
+                    List.map (Patient.scaleAbout Country.tower factor >> Patient.translateBy (leftTopCorner)) cloud
+
+                patients =
+                    List.indexedMap (\i -> Patient.view (config.patientView i))  percentageCloud
             in
-            cloud
-                |> List.indexedMap (\i -> 
-                    Patient.scaleAbout Country.tower factor
-                        >> Patient.translateBy (leftTopCorner)
-                        >> Patient.view {onClick = onClick i}
-                    )
-                |> div 
-                    [css 
-                        [ width (vh 80)
-                        , height (vh 80)
-                        , backgroundColor (rgb 55 140 88)
-                        , borderRadius (pct 50)
-                        , position relative
-                        ]
+            div 
+                [css 
+                    [ width (vh 80)
+                    , height (vh 80)
+                    , backgroundColor (rgb 55 140 88)
+                    , borderRadius (pct 50)
+                    , position relative
                     ]
+                ]
+                ( patients ++ [ config.overlay percentageCloud ])
 
         Input config lines  ->
             let 
