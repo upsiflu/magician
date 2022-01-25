@@ -2,18 +2,18 @@ module Main exposing (main, Model(..), Shared, Msg(..))
 
 {-| The SkryScanner App for the beloved Magician!
 
-@docs main, Model, Shared, Msg-}
+@docs main, Model, Shared, Msg
+-}
 
 import Browser
 import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, src)
 import Html.Styled.Events exposing (onClick)
-import Vector2d exposing (Vector2d)
-import Point2d exposing (Point2d)
-import Length exposing (Meters)
-import Seriousness exposing (Seriousness, create, read)
 import Css exposing (..)
+import Country
+import Patient.Path as Path exposing (Path)
+import Patient exposing (Patient)
 
 {-|-}
 main:Program () Model Msg
@@ -30,25 +30,7 @@ init : Model
 init = Scry [] initShared
 
 
-{-| A coordinate system where `(0, 0)` is the tower position, and positive `y` values go North, and positive `x` values go East, and distances can be calculated as if all patients were living on a plane (Euclidean distance). -}
-type Country =
-    Country
 
-{-| Position relative to the tower (**in meters**, because that's the package's internal representation)-}
-type alias Point =
-    Point2d Meters Country
-
-{-| Lengths **in meters** -}
-point : { x : Float, y : Float } -> Point
-point = Point2d.fromMeters
-
-{-|-}
-tower : Point
-tower = Point2d.origin
-
-{-| Position relative to the previous point, i.e. Path Segment -}
-type alias Vector =
-    Vector2d Meters Country
 
 {-|The Zoom center is the last path node, the zoom magnification depends on the patient pair that is closest adjacent. -}
 type alias Shared =
@@ -66,12 +48,9 @@ initShared =
     , zoomIn = False
     }
 
-type alias Patient = ( Point, Seriousness )
 type alias Patients = List Patient
 patientsToList p = [] 
 
-{-| In a path, the **implied** initial and terminal "patient" is the tower. This makes it a Polygon2D. -}
-type alias Path = List (Vector, Patient)
 
 {-|-}
 type Msg
