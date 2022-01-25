@@ -1,3 +1,4 @@
+# Flupsi's ScryScanner App -- Design considerations.
 # Constraints
 
 - Patients (`p`) have an euklidean coordinate (in km) and a seriousness `s` (=pay for touch-healing)
@@ -23,6 +24,8 @@
 
 - `Scry` and manually enter patient data (fun :-D)
     - either in the space-separated string form or as JSON
+    - Should show some helpful messages when mistyping
+    - input might be line-based or not
 - `Overview` the entire 120*120km2 map including little integers for the patient `s`
     - initializes the minimal path (tower -> tower)
     - `Zoom in` (to show patients such that no pair is closer than 1 cm, so that it's clickable -- only available when there is such a case)
@@ -90,3 +93,10 @@ Building a graph interactively can serve as a foundation for future optimization
 
 Since there is no braking or accelerating, we only need to model distances, not times.
 This means that the Ui will only show a spatial model; times can be derived by multiplication, for convenience.
+
+
+#Architecture / Libraries
+
+The app is offline-only, so the codebase is very simple. I have included `ianmackenzie`'s geometry library so I don't need to look up all the vector math I've forgotten in the past decade.
+
+I decided not to use any Gui library, and instead use the default `Html` and `Svg` packages from Elm, because the userbase is {1} and a magician doesn't need a polished interface, and developers don't need abstractions over the `view` because it's really basic.
