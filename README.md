@@ -16,7 +16,8 @@ Code Challenge, Jan. 25, Flupsi
 **How to browse the API and documentation:**
 
 - Install edp: `npm install -g elm-doc-preview`
-- Launch a live documentation on [port 8001](http://localhost:8001/src/Main.elm): `edp --port 8001`
+- Launch a live documentation on port 8001: `edp --port 8001`
+- Browse to [localhost:8001/packages/flupsi/magician/latest](http://localhost:8001/packages/flupsi/magician/latest)
 - You can run elm-reactor on port 8000 and edp on 8001 simultaneously.
 
 **How to explore the sources:**

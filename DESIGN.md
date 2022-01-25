@@ -97,7 +97,10 @@ This means that the Ui will only show a spatial model; times can be derived by m
 
 #Architecture / Libraries
 
-The app is offline-only, so the codebase is very simple. I have included `ianmackenzie`'s geometry library so I don't need to look up all the vector math I've forgotten in the past decade.
+The app is offline-only, so the codebase is very simple. 
+- I have included `ianmackenzie`'s geometry library so I don't need to look up all the vector math I've forgotten in the past decade.
+- `webbhuset/elm-json-decode` is a continuation-passing style decoder library which I tend to enjoy for its explicitness.
+
 The other libraries I had to include for the Browser platform are listed in the [elm.json](./elm.json) file.
 
 

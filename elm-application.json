@@ -4,6 +4,10 @@
     "version": "0.0.1",
     "exposed-modules": [
         "Main",
-        "Seriousness"
+        "Country",
+        "Patient",
+        "Patient.Seriousness",
+        "Patient.Cloud",
+        "Patient.Path"
     ]
 }

@@ -1,6 +1,7 @@
 module Country exposing (Country, Point, Vector, point, tower)
 
-{-|-}
+{-|
+@docs Country, Point, Vector, point, tower-}
 
 
 import Vector2d exposing (Vector2d)
