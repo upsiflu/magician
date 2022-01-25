@@ -26,6 +26,18 @@ Code Challenge, Jan. 25, Flupsi
 - Edit the modules
 - While `elm-reactor` is running, it'll live (re-)compile any source file in this directory. In case of error, the browser will output nicely formatted error messages. The same is true for `edp`.
 
-**Outlook**
+**How to run the test suite:**
+
+- install elm-test: `npm install -g elm-test`
+- run: `elm-test`
+- edit the test suite in the `tests` directory
+
+**How to verify the examples given in the documentation:**
+
+- you can `npm install -g elm-verify-examples`
+- proceed according to [the docs](https://github.com/stoeffel/elm-verify-examples)
+
+
+**Outlook:**
 
 _The magician will probably prefer a compiled web app served on the internet, that's for another day or two of coding..._
